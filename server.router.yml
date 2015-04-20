@@ -1,0 +1,55 @@
+---
+- name: "WAN/LAN (interfaces), DHCP/DNS (dnsmasq), & firewall (FireHOL)"
+  hosts: servers-router
+  # -------- local vars --------
+  vars:
+    - router_wan: "p1p1"
+    - router_lan: "p1p2"
+  roles:
+
+    # -------- ifaces   -------
+    - role: debops.ifupdown
+      sudo: yes
+      ifupdown_ignore_cap12s: Yes
+      ifupdown_external_interface: '{{ router_wan }}'
+      ifupdown_external_interface: '{{ router_lan }}'
+      ifupdown_interfaces:
+      - iface: '{{ router_wan }}'
+        type: 'interface'
+        inet: 'dhcp'
+        allow: 'hotplug'
+      - iface: '{{ router_lan }}'
+        type: 'interface'
+        inet: 'static'
+        allow: 'hotplug'
+        options: |
+          address 192.168.0.1
+          netmask 255.255.255.0
+          network 192.168.0.0
+          broadcast 192.168.0.255          
+
+    # -------- dnsmasq  -------
+    - role: cmprescott.dnsmasq
+      sudo: yes
+      dnsmasq_dns_interfaces: [ "interface={{ router_lan }}" ]
+      dnsmasq_dns_domains: [ "local=/intranet/" ]
+      dnsmasq_dhcp_ranges: [ "dhcp-range=192.168.0.2,192.168.0.254,12h" ]
+
+    # -------- firehol  -------
+    - role: cmprescott.FireHOL
+      sudo: yes     
+      firehol_interfaces:
+        - interface: "{{ router_lan }} lan"
+          other_rules: [ "policy accept" ]
+        - interface: "{{ router_wan }} wan"
+          client_rules: [ "all accept" ]
+      firehol_routers:
+        - router: "lan2wan inface {{ router_lan }} outface {{ router_wan }}"
+          route_rules: [ "all accept" ]
+          other_rules: [ "masquerade" ]
+
+  # ----- "1-offs" -----
+  tasks:
+    - name: "Router | '1-off' | ensure ip forwarding uncommented" 
+      sudo: yes
+      lineinfile: dest=/etc/sysctl.conf regexp=^#?net.ipv4.ip_forward=1 line=net.ipv4.ip_forward=1

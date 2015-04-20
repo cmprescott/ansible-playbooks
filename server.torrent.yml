@@ -1,0 +1,42 @@
+---
+# file: torrent-server.yml
+- name: "torrenting (rTorrent), & web interface (nginx, php, ruTorrent)"
+  hosts: servers-torrent
+  roles:
+
+    # -------- $PHP --------
+    - role: geerlingguy.php
+      sudo: yes
+      php_packages:
+       - php5-cli
+       - php5-fpm
+       - php5-geoip    
+      php_webserver_daemon: "nginx"
+      php_enable_php_fpm: true    
+
+    # -------- Nginx --------
+    - role: jdauphant.nginx
+      sudo: yes
+      nginx_http_params:
+        - sendfile on
+        - access_log /var/log/nginx/access.log
+      nginx_sites:
+        rutorrent:
+          - listen 80
+          - server_name localhost
+          - root /var/www
+          - location / { try_files $uri $uri/ =404; }
+          - location ~ \.php$ { fastcgi_split_path_info ^(.+\.php)(/.+)$; fastcgi_pass unix:/var/run/php5-fpm.sock; fastcgi_index index.php; include fastcgi_params; }
+          - location /RPC2 { include scgi_params; scgi_pass 127.0.0.1:5000; }
+
+    # -------- rTorrent --------
+    - role: cmprescott.rTorrent
+      rtorrent_download_rate: 2000
+      rtorrent_upload_rate: 100
+      rtorrent_peer_exchange: "no"
+      rtorrent_dht: "off"
+      rtorrent_other_settings:
+       - scgi_port = 127.0.0.1:5000
+
+    # -------- ruTorrent --------      
+    - role: cmprescott.ruTorrent

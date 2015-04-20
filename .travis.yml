@@ -1,0 +1,25 @@
+---
+language: python
+python: "2.7"
+before_install:
+ - sudo apt-get update -qq
+ - sudo apt-get install -qq python-apt python-pycurl
+install:
+  - sudo pip install ansible==1.8.4
+script:
+  # inventory file
+  - echo [servers.file] >> inventory
+  - echo localhost >> inventory
+  - echo [servers.router] >> inventory
+  - echo localhost >> inventory
+  - echo [servers.torrent] >> inventory
+  - echo localhost >> inventory
+  # clients
+  # - ansible-playbook -i inventory client.desktop.yml --syntax-check --list-tasks
+  # - ansible-playbook -i inventory client.developer.ansible.yml --syntax-check --list-tasks
+  # - ansible-playbook -i inventory client.openElec.yml --syntax-check --list-tasks
+  # servers
+  - ansible-galaxy -r .requirements.yml
+  - ansible-playbook -i inventory server.file.yml --syntax-check --list-tasks
+  - ansible-playbook -i inventory server.router.yml --syntax-check --list-tasks
+  - ansible-playbook -i inventory server.torrent.yml --syntax-check --list-tasks

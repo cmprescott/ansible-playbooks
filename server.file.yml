@@ -1,0 +1,59 @@
+---
+- name: "hard-drive mounts, bind mounts, & nfs"
+  hosts: servers.file
+  # -------- local vars --------
+  vars:
+   - path_mount_4tb: /media/cp/4tb
+   - path_nfs_films: /export/Films
+   - path_nfs_tv: /export/TV
+   - path_nfs_music: /export/Music
+  roles:
+
+    # -------- Media Mount --------
+    - name: Ensure hard-drives mounts
+      role: MichaelRigart.mount
+      sudo: yes
+      mount_devices:
+       - name: "{{ path_mount_4tb }}"
+         src: /dev/sda1
+         fstype: ext4
+         opts: defaults
+         state: mounted
+         dump: 0
+         passno: 2
+
+    # -------- Bind Mount --------
+    - name: Ensure bind mounts
+      role: MichaelRigart.mount
+      sudo: yes
+      mount_devices:
+       - name: "{{ path_nfs_films }}"
+         src: "{{ path_mount_4tb }}/Films"
+         fstype: none
+         opts: "defaults,bind"
+         state: mounted
+         dump: 0
+         passno: 0
+       - name: "{{ path_nfs_tv }}"
+         src: "{{ path_mount_4tb }}/TV"
+         opts: "defaults,bind"
+         fstype: none
+         state: mounted
+         dump: 0
+         passno: 0
+       - name: "{{ path_nfs_music }}"
+         src: "{{ path_mount_4tb }}/Chris/Music/Singles"
+         opts: "defaults,bind"
+         fstype: none
+         state: mounted
+         dump: 0
+         passno: 0
+
+    # -------- NFS --------
+    - name: Ensure nfs shares from bind mounts
+      role: geerlingguy.nfs
+      sudo: yes
+      nfs_exports:
+       - "{{ path_nfs_films }} *(rw,sync,no_root_squash)"
+       - "{{ path_nfs_tv }} *(rw,sync,no_root_squash)"
+       - "{{ path_nfs_music }} *(rw,sync,no_root_squash)"

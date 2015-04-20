@@ -1,0 +1,18 @@
+---
+# server-file
+# -----------
+- src: MichaelRigart.mount
+- src: geerlingguy.nfs
+
+# server-router
+# -------------
+- src: cmprescott.dnsmasq
+- src: cmprescott.FireHOL
+- src: debops.ifupdown
+
+# server-torrent
+# --------------
+- src: cmprescott.rTorrent
+- src: cmprescott.ruTorrent
+- src: geerlingguy.php
+- src: jdauphant.nginx
