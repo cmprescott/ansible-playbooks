@@ -1,13 +1,13 @@
 ---
 - name: "WAN/LAN (interfaces), DHCP/DNS (dnsmasq), & firewall (FireHOL)"
-  hosts: servers-router
+  hosts: servers.router
   # -------- local vars --------
   vars:
     - router_wan: "p1p1"
     - router_lan: "p1p2"
   roles:
 
-    # -------- ifaces   -------
+    # -------- LAN/WAN (interfaces) -------
     - role: debops.ifupdown
       sudo: yes
       ifupdown_ignore_cap12s: Yes
@@ -28,14 +28,14 @@
           network 192.168.0.0
           broadcast 192.168.0.255          
 
-    # -------- dnsmasq  -------
+    # -------- DHCP/DNS (dnsmasq)  -------
     - role: cmprescott.dnsmasq
       sudo: yes
       dnsmasq_dns_interfaces: [ "interface={{ router_lan }}" ]
       dnsmasq_dns_domains: [ "local=/intranet/" ]
       dnsmasq_dhcp_ranges: [ "dhcp-range=192.168.0.2,192.168.0.254,12h" ]
 
-    # -------- firehol  -------
+    # -------- firewall (FireHOL)  -------
     - role: cmprescott.FireHOL
       sudo: yes     
       firehol_interfaces:

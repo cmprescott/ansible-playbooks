@@ -17,9 +17,6 @@
        - name: "{{ path_mount_4tb }}"
          src: /dev/sda1
          fstype: ext4
-         opts: defaults
-         state: mounted
-         dump: 0
          passno: 2
 
     # -------- Bind Mount --------
@@ -31,23 +28,14 @@
          src: "{{ path_mount_4tb }}/Films"
          fstype: none
          opts: "defaults,bind"
-         state: mounted
-         dump: 0
-         passno: 0
        - name: "{{ path_nfs_tv }}"
          src: "{{ path_mount_4tb }}/TV"
          opts: "defaults,bind"
          fstype: none
-         state: mounted
-         dump: 0
-         passno: 0
        - name: "{{ path_nfs_music }}"
          src: "{{ path_mount_4tb }}/Chris/Music/Singles"
          opts: "defaults,bind"
          fstype: none
-         state: mounted
-         dump: 0
-         passno: 0
 
     # -------- NFS --------
     - name: Ensure nfs shares from bind mounts

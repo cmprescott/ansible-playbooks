@@ -2,6 +2,17 @@
 
 Example playbooks. I used these to setup my various computers.
 
+## Usage
+
+See .travis.yml for Debian based command examples.
+
+1. Install pip & Ansible
+2. Install dependencies `ansible-galaxy install -r .requirements.yml`
+3. Create file `inventory` with groups
+4. Run `ansible-playbook -i inventory THE_PLAYBOOK.yml` 
+  A. On Elementary OS run `ansible-playbook -i inventory THE_PLAYBOOK.yml --extra-vars "ansible_os_family=Debian ansible_distribution=ubuntu"`
+  B. This is because a lot of re-used playbooks include Debian and Ubuntu vars
+
 ## Playbooks
 
 ### Clients
