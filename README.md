@@ -33,36 +33,36 @@ See .travis.yml for Debian based command examples.
 
 #### client.media
 
-- [ ] file shares (autoFS)
-- [ ] Kodi
+- [X] file shares (autoFS)
+- [ ] Kodi (WIP -- 50%)
 
 ### Servers
 
 #### server.media
 
+- [X] administration (bash, byobu, tree, etc)
 - [X] hard-drive mounts
 - [X] bind mounts
 - [X] *nix shares (nfs)
-- [ ] administration (bash, byobu, tree, etc)
 - [ ] Kodi (mySQL, database)
 - [ ] nfs authentication
 - [ ] windows shares (samba)
 
 #### server.router 
 
+- [X] administration (bash, byobu, tree, etc)
 - [X] WAN/LAN (interfaces)
 - [X] DHCP/DNS (dnsmasq)
 - [X] firewall (FireHOL)
-- [ ] administration (bash, byobu, tree, etc)
 - [ ] management (dnsmasq DHCP options)
 - [ ] monitoring (Monit)
 - [ ] exposure (Open-vpn)
 
 #### server.torrent 
 
+- [X] administration (bash, byobu, tree, etc)
 - [X] torrenting (rTorrent)
 - [X] web interface (nginx, php, ruTorrent)
-- [ ] administration (bash, byobu, tree, etc)
 - [ ] file management (JRE  1.8, FileBot)
 - [ ] enhance web interface (ruTorrent plugins)
 
