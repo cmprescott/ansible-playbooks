@@ -20,10 +20,10 @@
 
   roles:
 
-    - name: "FileSrv | admin | ensure common apps/settings"
+    - name: "MediaSrv | admin | ensure common apps/settings"
       role: cmprescott.common
 
-    - name: "FileSrv | physical media | ensure mounts"
+    - name: "MediaSrv | physical media | ensure mounts"
       role: MichaelRigart.mount
       sudo: yes
       mount_devices:
@@ -32,7 +32,7 @@
           fstype: ext4
           passno: 2
 
-    - name: "FileSrv | bind | ensure mounts"
+    - name: "MediaSrv | bind | ensure mounts"
       role: MichaelRigart.mount
       sudo: yes
       mount_devices:
@@ -49,7 +49,7 @@
           opts: "{{ BIND_MOUNT_OPTS }}"
           fstype: "{{ BIND_MOUNT_FS }}"
 
-    - name: "FileSrv | share | ensure nfs from bind mounts"
+    - name: "MediaSrv | share | ensure nfs from bind mounts"
       role: geerlingguy.nfs
       sudo: yes
       nfs_exports:
