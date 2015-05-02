@@ -2,11 +2,11 @@
 # file: server.file.yml
 
 - name: "FileSrv"
-  
+
   hosts: servers.file
-  
+
   vars:
-  
+
     # Env specific
     path_mount_hd: /media/cp/4tb
     path_nfs_movies: /export/Movies
@@ -19,6 +19,9 @@
     NFS_OPTS: "*(rw,sync,no_root_squash)"
 
   roles:
+
+    - name: "FileSrv | admin | ensure common apps/settings"
+      role: cmprescott.common
 
     - name: "FileSrv | physical media | ensure mounts"
       role: MichaelRigart.mount

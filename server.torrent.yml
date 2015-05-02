@@ -1,16 +1,19 @@
 ---
-# file: torrent-server.yml
+# file: server.torrent.yml
 
 - name: "Torrent"
-  
+
   hosts: servers.torrent
-  
+
   roles:
+
+    - name: "Torrent | admin | ensure common apps/settings"
+      role: cmprescott.common
 
     - name: "Torrent | client | ensure rTorrent"
       role: cmprescott.rTorrent
       rtorrent_other_settings:
-       - scgi_port = 127.0.0.1:5000
+        - scgi_port = 127.0.0.1:5000
 
     - name: "Torrent | web interface | ensure ruTorrent"
       role: cmprescott.ruTorrent

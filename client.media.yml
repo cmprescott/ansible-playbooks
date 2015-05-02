@@ -6,19 +6,19 @@
   hosts: clients.media
 
   vars:
-    
+
     # Env specific
     nfs_indirect_map_name: auto.nfs
     nfs_mount_path: /mnt/nfs    
     nfs_path_movies: /export/Movies
     nfs_path_tv: /export/TV
     nfs_server: cp-livingroom    
-    
+
     # Constants
     NFS_FSTYPE: "nfs,rw,bg,hard,intr,tcp,resvport"
 
   roles:
-    
+
     - name: "Media Client | NFS | ensure automounts"
       sudo: yes
       role: cmprescott.autofs

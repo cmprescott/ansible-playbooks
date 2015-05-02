@@ -2,16 +2,19 @@
 # file: server.router.yml
 
 - name: "Router"
-  
+
   hosts: servers.router
-  
+
   vars:
 
     # Env Specific
     router_wan: "p1p1"
     router_lan: "p1p2"
-  
+
   roles:
+
+    - name: "Router | admin | ensure common apps/settings"
+      role: cmprescott.common
 
     - name: "Router | LAN/WAN | ensure interfaces"
       role: debops.ifupdown
@@ -58,6 +61,7 @@
 
   # "1-offs"
   tasks:
+
     - name: "Router | '1-off' | ensure ip forwarding uncommented" 
       sudo: yes
       lineinfile: dest=/etc/sysctl.conf regexp=^#?net.ipv4.ip_forward=1 line=net.ipv4.ip_forward=1
