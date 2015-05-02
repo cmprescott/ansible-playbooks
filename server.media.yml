@@ -3,7 +3,7 @@
 
 - name: "FileSrv"
 
-  hosts: servers.file
+  hosts: servers.media
 
   vars:
 
