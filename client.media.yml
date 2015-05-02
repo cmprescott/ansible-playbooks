@@ -1,0 +1,42 @@
+---
+# file: client.media.yml
+
+- name: "Media Client"
+
+  hosts: clients.media
+
+  vars:
+    
+    # Env specific
+    nfs_indirect_map_name: auto.nfs
+    nfs_mount_path: /mnt/nfs    
+    nfs_path_movies: /export/Movies
+    nfs_path_tv: /export/TV
+    nfs_server: cp-livingroom    
+    
+    # Constants
+    NFS_FSTYPE: "nfs,rw,bg,hard,intr,tcp,resvport"
+
+  roles:
+    
+    - name: "Media Client | NFS | ensure automounts"
+      sudo: yes
+      role: cmprescott.autofs
+      autofs_indirect_maps:
+        - name: "{{ nfs_indirect_map_name }}" 
+          path: "{{ nfs_mount_path }}"
+          mounts: 
+            - name: "{{ nfs_path_movies | basename }}" 
+              fstype: "{{ NFS_FSTYPE }}" 
+              url: "{{ nfs_server }}:{{ nfs_path_movies }}"
+            - name: "{{ nfs_path_tv | basename }}"
+              fstype: "{{ NFS_FSTYPE }}"
+              url: "{{ nfs_server }}:{{ nfs_path_tv }}"
+
+    - name: "Media Client | Player | ensure Kodi"
+      role: cmprescott.kodi
+      kodi_source_videos: 
+        - "{{ nfs_mount_path }}/{{ nfs_path_movies | basename }}"
+        - "{{ nfs_mount_path }}/{{ nfs_path_tv | basename }}"
+
+...
