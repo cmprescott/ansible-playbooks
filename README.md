@@ -31,26 +31,22 @@ See .travis.yml for Debian based command examples.
 - [ ] editor (SublimeText, PackageControl, PackageControl - Ansible Syntax)
 - [ ] web browser (Google Chrome)
 
-#### client.openElec
+#### client.media
 
 - [ ] file shares (autoFS)
-- [ ] XBMC
+- [ ] Kodi
 
 ### Servers
 
-#### server.file
+#### server.media
 
 - [X] hard-drive mounts
 - [X] bind mounts
 - [X] *nix shares (nfs)
 - [ ] administration (bash, byobu, tree, etc)
+- [ ] Kodi (mySQL, database)
 - [ ] nfs authentication
 - [ ] windows shares (samba)
-
-#### server.media
-
-- [ ] administration (bash, byobu, tree, etc)
-- [ ] XBMC (mySQL, database)
 
 #### server.router 
 

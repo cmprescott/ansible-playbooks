@@ -46,7 +46,7 @@
           opts: "{{ BIND_MOUNT_OPTS }}"
           fstype: "{{ BIND_MOUNT_FS }}"
 
-    - name: "FileSrv | nfs | ensure shares from bind mounts"
+    - name: "FileSrv | share | ensure nfs from bind mounts"
       role: geerlingguy.nfs
       sudo: yes
       nfs_exports:
