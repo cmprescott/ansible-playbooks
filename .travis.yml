@@ -14,12 +14,13 @@ script:
   - echo localhost >> inventory
   - echo [servers.torrent] >> inventory
   - echo localhost >> inventory
+  # Dependencies
+  - ansible-galaxy -r .requirements.yml
   # clients
   # - ansible-playbook -i inventory client.desktop.yml --syntax-check --list-tasks
   # - ansible-playbook -i inventory client.developer.ansible.yml --syntax-check --list-tasks
-  # - ansible-playbook -i inventory client.openElec.yml --syntax-check --list-tasks
+  # - ansible-playbook -i inventory client.media.yml --syntax-check --list-tasks
   # servers
-  - ansible-galaxy -r .requirements.yml
   - ansible-playbook -i inventory server.file.yml --syntax-check --list-tasks
   - ansible-playbook -i inventory server.router.yml --syntax-check --list-tasks
   - ansible-playbook -i inventory server.torrent.yml --syntax-check --list-tasks
