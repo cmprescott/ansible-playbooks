@@ -1,18 +1,30 @@
 ---
-# server-file
+
+# client.media
+# ------------
+- src: cmprescott.autofs
+- src: cmprescott.kodi
+
+# server.*
+# --------
+- src: cmprescott.common
+
+# server.file
 # -----------
 - src: MichaelRigart.mount
 - src: geerlingguy.nfs
 
-# server-router
+# server.router
 # -------------
 - src: cmprescott.dnsmasq
 - src: cmprescott.FireHOL
 - src: debops.ifupdown
 
-# server-torrent
+# server.torrent
 # --------------
 - src: cmprescott.rTorrent
 - src: cmprescott.ruTorrent
 - src: geerlingguy.php
 - src: jdauphant.nginx
+
+...
