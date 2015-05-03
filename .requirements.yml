@@ -2,18 +2,17 @@
 
 # client.media
 # ------------
-- src: cmprescott.autofs
 - src: cmprescott.kodi
 
 # server.*
 # --------
 - src: cmprescott.common
 
-# server.file
+# server.media
 # -----------
 - src: MichaelRigart.mount
 - src: geerlingguy.nfs
-
+- src: geerlingguy.mysql
 # server.router
 # -------------
 - src: cmprescott.dnsmasq
