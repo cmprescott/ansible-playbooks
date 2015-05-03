@@ -57,4 +57,12 @@
         - "{{ path_nfs_music }} {{ NFS_OPTS }}"
         - "{{ path_nfs_tv }} {{ NFS_OPTS }}"
 
+    - name: "MediaSrv | Kodi | ensure mysql & mysql users"
+      role: geerlingguy.mysql
+      sudo: yes
+      mysql_users:
+        - name: kodi
+          password: kodi
+          priv: "*.*:ALL"
+
 ...
