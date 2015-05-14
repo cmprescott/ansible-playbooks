@@ -3,6 +3,9 @@
 # client.media
 # ------------
 - src: cmprescott.kodi
+- src: cmprescott.mc2xml
+- src: cmprescott.tvheadend
+- src: cmprescott.HDHomeRun
 
 # server.*
 # --------
@@ -13,6 +16,7 @@
 - src: MichaelRigart.mount
 - src: geerlingguy.nfs
 - src: geerlingguy.mysql
+
 # server.router
 # -------------
 - src: cmprescott.dnsmasq
