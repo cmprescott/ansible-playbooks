@@ -1,18 +1,24 @@
 ---
 
+# *.*
+# --------
+- src: cmprescott.common
+
+# client.developer
+# ------------
+- src: cmprescott.jre
+- src: cmprescott.SmartGit
+
 # client.media
 # ------------
 - src: cmprescott.kodi
-
-# server.*
-# --------
-- src: cmprescott.common
 
 # server.media
 # -----------
 - src: MichaelRigart.mount
 - src: geerlingguy.nfs
 - src: geerlingguy.mysql
+
 # server.router
 # -------------
 - src: cmprescott.dnsmasq

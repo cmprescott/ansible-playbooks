@@ -8,6 +8,16 @@
 
     # Env specific
 
-  roles: []
+  roles:
+
+    - name: "Developer Client | ALL | Basic applications & Env preferences"
+      role: cmprescott.common
+
+    - name: "Developer Client | SCM | SmartGit's Linux JRE dependency"
+      role: cmprescott.jre 
+      when: ansible_system == 'Linux'
+
+    - name: "Developer Client | SCM | SmartGit"
+      role: cmprescott.SmartGit
 
 ...
