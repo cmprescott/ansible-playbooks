@@ -1,44 +1,33 @@
 # Ansible Playbooks
 
-Example playbooks. I used these to setup my various computers.
+My playbooks I use to configure my computers. Server playbooks intended for apt-based OS. Client playbooks intended for
+apt-based OS & Mac OS X.
 
 ## Usage
 
-See .travis.yml for Debian based command examples.
-
-1. Install pip & Ansible
-2. Install dependencies `ansible-galaxy install -r .requirements.yml`
-3. Create file `inventory` with groups
-4. Run `ansible-playbook -i inventory THE_PLAYBOOK.yml` 
-  - On Elementary OS run `ansible-playbook -i inventory THE_PLAYBOOK.yml --extra-vars "ansible_os_family=Debian ansible_distribution=ubuntu"`
-  - This is because a lot of re-used playbooks include Debian and Ubuntu vars
+See .travis.yml for Debian dependency installation and playbook usage examples.
 
 ## Playbooks
 
-### Clients
+### client.desktop
 
-#### client.desktop
-
-- [ ] administration (bash, byobu, tree, etc)
 - [ ] backup (rsync, scripts)
 - [ ] file shares (autoFS)
 - [ ] UI fixes (Elementary OS Plank, MacOSX bad edid, etc)
 - [ ] web browser (Google Chrome)
 
-#### client.developer.ansible
+### client.developer
 
+- [ ] administration (bash, byobu, tree, etc)
 - [ ] scm (SmartGit)
-- [ ] editor (SublimeText, PackageControl, PackageControl - Ansible Syntax)
-- [ ] web browser (Google Chrome)
+- [ ] editor (SublimeText, SublimeText PackageControl)
 
-#### client.media
+### client.media
 
-- [X] file shares (autoFS)
-- [ ] Kodi (WIP -- 50%)
+- [ ] media playback (Kodi)
+- [ ] TV playback (HDHomeRun, mc2xml)
 
-### Servers
-
-#### server.media
+### server.media
 
 - [X] administration (bash, byobu, tree, etc)
 - [X] hard-drive mounts
@@ -48,7 +37,7 @@ See .travis.yml for Debian based command examples.
 - [ ] nfs authentication
 - [ ] windows shares (samba)
 
-#### server.router 
+### server.router 
 
 - [X] administration (bash, byobu, tree, etc)
 - [X] WAN/LAN (interfaces)
@@ -58,24 +47,13 @@ See .travis.yml for Debian based command examples.
 - [ ] monitoring (Monit)
 - [ ] exposure (Open-vpn)
 
-#### server.torrent 
+### server.torrent 
 
 - [X] administration (bash, byobu, tree, etc)
 - [X] torrenting (rTorrent)
 - [X] web interface (nginx, php, ruTorrent)
 - [ ] file management (JRE  1.8, FileBot)
 - [ ] enhance web interface (ruTorrent plugins)
-
-## System
-
-### Servers 
-
-1. Ubuntu Server 14.04.2
-
-### Clients 
-
-1. elementary os
-2. Mac OS X 
 
 ## Author
 
