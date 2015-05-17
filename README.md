@@ -20,7 +20,7 @@ See .travis.yml for Debian dependency installation and playbook usage examples.
 
 - [X] administration (bash, byobu, tree, etc)
 - [X] scm (SmartGit)
-- [ ] editor (SublimeText, SublimeText PackageControl)
+- [X] editor (SublimeText, SublimeText PackageControl)
 
 ### client.media
 

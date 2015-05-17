@@ -8,6 +8,8 @@
 # ------------
 - src: cmprescott.jre
 - src: cmprescott.SmartGit
+- src: jdauphant.sublimetext
+- src: igor_mukhin.sublimetext3_packagecontrol
 
 # client.media
 # ------------

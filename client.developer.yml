@@ -20,4 +20,16 @@
     - name: "Developer Client | SCM | SmartGit"
       role: cmprescott.SmartGit
 
+    - name: "Developer Client | Editor | SublimeText"
+      sudo: Yes
+      role: jdauphant.sublimetext
+
+    - name: "Developer Client | Editor | SublimeText PackageControl"
+      role: igor_mukhin.sublimetext3_packagecontrol
+      packagecontrol_packages:
+        - Ansible
+        - AnsibleSnippets
+        - Github Color Theme
+        - GitHub Flavored Markdown Preview
+
 ...
