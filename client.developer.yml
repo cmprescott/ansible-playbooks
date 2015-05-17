@@ -1,0 +1,13 @@
+---
+
+- name: "Developer Client"
+
+  hosts: clients.developer
+
+  vars: {}
+
+    # Env specific
+
+  roles: []
+
+...

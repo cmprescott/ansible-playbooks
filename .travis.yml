@@ -8,6 +8,8 @@ install:
   - sudo pip install ansible==1.8.4
 script:
   # inventory file
+  - echo [clients.developer] >> inventory
+  - echo localhost >> inventory
   - echo [clients.media] >> inventory
   - echo localhost >> inventory
   - echo [servers.media] >> inventory
@@ -20,7 +22,7 @@ script:
   - ansible-galaxy -r .requirements.yml
   # clients
   # - ansible-playbook -i inventory client.desktop.yml --syntax-check --list-tasks
-  # - ansible-playbook -i inventory client.developer.ansible.yml --syntax-check --list-tasks
+  - ansible-playbook -i inventory client.developer.yml --syntax-check --list-tasks
   - ansible-playbook -i inventory client.media.yml --syntax-check --list-tasks
   # servers
   - ansible-playbook -i inventory server.media.yml --syntax-check --list-tasks
