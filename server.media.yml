@@ -1,7 +1,7 @@
 ---
-# file: server.file.yml
+# file: server.media.yml
 
-- name: "FileSrv"
+- name: "MediaSrv"
 
   hosts: servers.media
 
@@ -52,6 +52,8 @@
     - name: "MediaSrv | share | ensure nfs from bind mounts"
       role: geerlingguy.nfs
       sudo: yes
+      ansible_os_family: Debian
+      vars:
       nfs_exports:
         - "{{ path_nfs_movies }} {{ NFS_OPTS }}"
         - "{{ path_nfs_music }} {{ NFS_OPTS }}"
