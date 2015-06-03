@@ -8,16 +8,17 @@
   vars:
 
     # Env specific
-    nfs_path_movies: /export/Movies
-    nfs_path_tv: /export/TV
+    nfs_path_movies: export/Movies
+    nfs_path_tv: export/TV
     nfs_server: cp-livingroom
 
   roles:
 
     - name: "Media Client | Player | ensure Kodi"
       role: cmprescott.kodi
-      kodi_source_videos: 
+      kodi_source_videos:
         - "nfs://{{ nfs_server }}/{{ nfs_path_movies }}"
         - "nfs://{{ nfs_server }}/{{ nfs_path_tv }}"
+      kodi_pkg_pvr: kodi-pvr-tvheadend-hts
 
 ...
