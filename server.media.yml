@@ -67,4 +67,7 @@
           password: kodi
           priv: "*.*:ALL"
 
+    - name: ensure Tvheadend
+      role: cmprescott.tvheadend
+
 ...
