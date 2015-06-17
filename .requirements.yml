@@ -29,5 +29,7 @@
 - src: cmprescott.ruTorrent
 - src: geerlingguy.php
 - src: jdauphant.nginx
+- src: cmprescott.jre
+- src: cmprescott.FileBot
 
 ...
