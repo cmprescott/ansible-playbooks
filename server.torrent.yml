@@ -49,4 +49,7 @@
           - location ~ \.php$ { fastcgi_split_path_info ^(.+\.php)(/.+)$; fastcgi_pass unix:/var/run/php5-fpm.sock; fastcgi_index index.php; include fastcgi_params; }
           - location /RPC2 { include scgi_params; scgi_pass 127.0.0.1:5000; }
 
+    - name: "Torrent | file mgmt | Install Java 8 JRE dependency"
+      role: cmprescott.jre
+
 ...
