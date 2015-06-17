@@ -5,6 +5,10 @@
 
   hosts: servers.torrent
 
+  vars:
+
+    ansible_os_family_override: Debian
+
   roles:
 
     - name: "Torrent | admin | ensure common apps/settings"
@@ -21,6 +25,7 @@
     - name: "Torrent | web interface | ensure $PHP"
       role: geerlingguy.php
       sudo: yes
+      ansible_os_family: "{{ ansible_os_family_override }}"
       php_packages:
         - php5-cli
         - php5-fpm
@@ -31,6 +36,7 @@
     - name: "Torrent | web interface | ensure Nginx"
       role: jdauphant.nginx
       sudo: yes
+      ansible_os_family: "{{ ansible_os_family_override }}"
       nginx_http_params:
         - sendfile on
         - access_log /var/log/nginx/access.log
