@@ -37,7 +37,7 @@
             address 192.168.0.1
             netmask 255.255.255.0
             network 192.168.0.0
-            broadcast 192.168.0.255          
+            broadcast 192.168.0.255
 
     - name: "Router | DHCP/DNS | ensure dnsmasq"
       role: cmprescott.dnsmasq
@@ -48,7 +48,7 @@
 
     - name: "Router | firewall | ensure FireHOL"
       role: cmprescott.FireHOL
-      sudo: yes     
+      sudo: yes
       firehol_interfaces:
         - interface: "{{ router_lan }} lan"
           other_rules: [ "policy accept" ]
@@ -62,7 +62,7 @@
   # "1-offs"
   tasks:
 
-    - name: "Router | '1-off' | ensure ip forwarding uncommented" 
+    - name: "Router | '1-off' | ensure ip forwarding uncommented"
       sudo: yes
       lineinfile: dest=/etc/sysctl.conf regexp=^#?net.ipv4.ip_forward=1 line=net.ipv4.ip_forward=1
 
