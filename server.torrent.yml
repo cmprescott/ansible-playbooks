@@ -11,8 +11,10 @@
     ansible_os_family_override: Debian
 
     # env specific
-    path_movies: /media/cp/4tb/Movies
-    path_tv: /media/cp/4tb/TV
+    path_drive_storage: /media/cp/4tb
+    path_movies: "{{ path_drive_storage }}/Movies"
+    path_torrent_dl: "{{ path_drive_storage }}/rtorrent/download"
+    path_tv: "{{ path_drive_storage }}/TV"
     path_user_log: ~/log
     path_user_bin: ~/bin
 
@@ -23,6 +25,10 @@
       with_items:
         - "{{ path_user_log }}"
         - "{{ path_user_bin }}"
+        - ~/rtorrent
+    
+    - name: "PreTask | ensure rtorrent download link"
+      file: path=~/rtorrent/download src={{ path_torrent_dl }} state=link
 
   roles:
 
@@ -31,6 +37,7 @@
 
     - name: "Torrent | client | ensure rTorrent"
       role: cmprescott.rTorrent
+      rtorrent_directory_download: "{{ path_torrent_dl }}"
       rtorrent_other_settings:
         - scgi_port = 127.0.0.1:5000
         - 'system.method.set_key=event.download.finished,filebot_amc,"execute={~/bin/filebot.amc.sh,$d.get_base_path=,$d.get_name=,$d.get_custom1=}"'
