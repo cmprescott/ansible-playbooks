@@ -5,7 +5,7 @@ apt-based OS & Mac OS X.
 
 ## Usage
 
-See .travis.yml for Debian dependency installation and playbook usage examples.
+See .travis.yml for examples of installating requirements and usage.
 
 ## Playbooks
 
@@ -24,16 +24,16 @@ See .travis.yml for Debian dependency installation and playbook usage examples.
 
 ### client.media
 
-- [ ] media playback (Kodi)
-- [ ] TV playback (HDHomeRun, mc2xml)
+- [X] media playback (Kodi)
+- [ ] TV playback (tuner, tvheadend, mc2xml)
 
 ### server.media
 
 - [X] administration (bash, byobu, tree, etc)
 - [X] hard-drive mounts
 - [X] bind mounts
-- [X] *nix shares (nfs)
-- [ ] Kodi (mySQL, database)
+- [X] linux shares (nfs)
+- [X] Kodi (mySQL db)
 - [ ] nfs authentication
 - [ ] windows shares (samba)
 
@@ -52,7 +52,7 @@ See .travis.yml for Debian dependency installation and playbook usage examples.
 - [X] administration (bash, byobu, tree, etc)
 - [X] torrenting (rTorrent)
 - [X] web interface (nginx, php, ruTorrent)
-- [ ] file management (JRE  1.8, FileBot)
+- [X] file management (JRE  1.8, FileBot)
 - [ ] enhance web interface (ruTorrent plugins)
 
 ## Author
