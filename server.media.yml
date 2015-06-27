@@ -7,6 +7,9 @@
 
   vars:
 
+    # overrides / hacks for other people's roles
+    ansible_os_family_override: Debian
+
     # Env specific
     path_mount_hd: /media/cp/4tb
     path_nfs_movies: /export/Movies
@@ -16,7 +19,7 @@
     # Constants
     BIND_MOUNT_OPTS: "defaults,bind"
     BIND_MOUNT_FS: "none"
-    NFS_OPTS: "*(rw,sync,no_root_squash)"
+    NFS_OPTS: "*(rw,sync,no_root_squash,insecure)"
 
   roles:
 
@@ -52,6 +55,7 @@
     - name: "MediaSrv | share | ensure nfs from bind mounts"
       role: geerlingguy.nfs
       sudo: yes
+      ansible_os_family: "{{ ansible_os_family_override }}"
       nfs_exports:
         - "{{ path_nfs_movies }} {{ NFS_OPTS }}"
         - "{{ path_nfs_music }} {{ NFS_OPTS }}"
@@ -60,6 +64,7 @@
     - name: "MediaSrv | Kodi | ensure mysql & mysql users"
       role: geerlingguy.mysql
       sudo: yes
+      ansible_os_family: "{{ ansible_os_family_override }}"
       mysql_users:
         - name: kodi
           password: kodi
