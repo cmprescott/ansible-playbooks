@@ -1,0 +1,124 @@
+---
+# file: server.wordpress.yml
+#
+# DESCRIPTION : Wordpress running on the LEMP stack
+# ANSIBLE VER : 1.8.4
+# TARGET OS   : Ubuntu 14.04
+
+- name: "wordpress"
+
+  hosts: servers.wordpress
+
+  vars:
+
+    # env specific
+    # TODO: inventory doesn't override?
+    # website_admin_user: CHANGE_IT
+    # website_admin_pass: CHANGE_IT
+    # website_admin_email: CHANGE_IT@CHANGE_IT.com
+    # website_name: CHANGE_IT
+    # website_url: www.CHANGE_IT.com
+
+    # vars shared between roles
+    php_fpm_listen: "/var/run/php5-fpm.sock"
+
+    # global for wordpress
+    wordpress_db: wordpress
+    wordpress_user: wordpress
+    wordpress_pass: password
+    wordpress_path: "/var/www/{{ website_name }}"
+
+  roles:
+
+    - name: "Wordpress | admin | ensure common apps/settings"
+      role: cmprescott.common
+
+    - name: "Wordpress | LEMP | ensure mysql & mysql users"
+      sudo: yes
+      role: geerlingguy.mysql
+      mysql_databases:
+        - name: "{{ wordpress_db }}"
+      mysql_users:
+        - name: "{{ wordpress_user }}"
+          password: "{{ wordpress_pass }}"
+          priv: "*.*:ALL"
+
+    - name: "Wordpress | LEMP | ensure $PHP"
+      sudo: yes
+      role: geerlingguy.php
+      php_packages:
+        - libssh2-php
+        - php5-cli
+        - php5-fpm
+        - php5-gd
+        - php5-mysql
+      php_webserver_daemon: "nginx"
+      php_enable_php_fpm: true
+
+    - name: "Wordpress | LEMP | ensure Nginx"
+      sudo: yes
+      role: jdauphant.nginx
+      nginx_http_params:
+        - access_log /var/log/nginx/access.log
+      nginx_sites:
+        wordpress:
+          - listen 80
+          - server_name {{ website_name }}
+          - index index.php
+          - root /var/www/{{ website_name }}
+          - location / { try_files $uri $uri/ =404; }
+          - location ~ \.php$ { fastcgi_split_path_info ^(.+\.php)(/.+)$; fastcgi_pass unix:{{ php_fpm_listen }}; fastcgi_index index.php; include fastcgi_params; }
+
+    - name: "Wordpress | ensure wordpress cli"
+      sudo: yes
+      role: heskethm.wp-cli
+
+  post_tasks:
+
+    - name: "PostTask | Is WordPress installed?"
+      stat: path="{{ wordpress_path }}"
+      register: wp_dir
+
+    # wordpress installation
+    - name: "PreTask | temporarily allow all to wrx to our wordpress install dir"
+      sudo: yes
+      file: path="{{ wordpress_path }}" owner=www-data group=www-data mode=777 state=directory
+      when: wp_dir.stat.isdir is not defined
+
+    - name: "PostTask | Download WordPress"
+      command: wp core download
+      args:
+          chdir: "{{ wordpress_path }}/"
+      when: wp_dir.stat.isdir is not defined
+
+    - name: "PostTask | Configure WordPress"
+      command: wp core config
+               --path="."
+               --dbname="{{ wordpress_db }}"
+               --dbuser="{{ wordpress_user }}"
+               --dbpass="{{ wordpress_pass }}"
+      args:
+          chdir: "{{ wordpress_path }}/"
+      when: wp_dir.stat.isdir is not defined
+
+    - name: "PostTask | Install WordPress tables"
+      command: wp core install
+                --url="{{ website_url }}"
+                --title="Ansible Wordpress Installation"
+                --admin_user="{{ website_admin_user }}"
+                --admin_password="{{ website_admin_pass }}"
+                --admin_email="{{ website_admin_email }}"
+      args:
+          chdir: "{{ wordpress_path }}/"
+      when: wp_dir.stat.isdir is not defined
+
+    # ensure most basic security
+    - name: "PostTask | Ensure nginx ownership"
+      sudo: yes
+      file: path="{{ wordpress_path }}" owner=www-data group=www-data recurse=yes
+
+    - name: "PostTask | Ensure website dir not all writeable"
+      sudo: yes
+      file: path="{{ wordpress_path }}" owner=www-data group=www-data mode=0775 state=directory
+
+...

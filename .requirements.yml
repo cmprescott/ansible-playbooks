@@ -10,12 +10,15 @@
 # server.*
 # --------
 - src: cmprescott.common
+- src: geerlingguy.mysql
+- src: geerlingguy.php
+  version: 1.9.1
+- src: jdauphant.nginx
 
 # server.media
 # -----------
 - src: MichaelRigart.mount
 - src: geerlingguy.nfs
-- src: geerlingguy.mysql
 
 # server.router
 # -------------
@@ -27,9 +30,11 @@
 # --------------
 - src: cmprescott.rTorrent
 - src: cmprescott.ruTorrent
-- src: geerlingguy.php
-- src: jdauphant.nginx
 - src: cmprescott.jre
 - src: cmprescott.FileBot
+
+# server.wordpress
+# ----------------
+- src: heskethm.wp-cli
 
 ...
