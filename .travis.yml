@@ -12,6 +12,8 @@ script:
   - echo localhost >> inventory
   - echo [servers.media] >> inventory
   - echo localhost >> inventory
+  - echo [servers.freebsd] >> inventory
+  - echo localhost >> inventory
   - echo [servers.router] >> inventory
   - echo localhost >> inventory
   - echo [servers.torrent] >> inventory
@@ -25,4 +27,5 @@ script:
   # servers
   - ansible-playbook -i inventory server.media.yml --syntax-check --list-tasks
   - ansible-playbook -i inventory server.router.yml --syntax-check --list-tasks
+  - ansible-playbook -i inventory server.torrent-freebsd.yml --syntax-check --list-tasks
   - ansible-playbook -i inventory server.torrent.yml --syntax-check --list-tasks

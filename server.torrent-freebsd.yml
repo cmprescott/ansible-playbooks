@@ -1,0 +1,62 @@
+---
+# file: server.torrent-freebsd.yml
+# Currently WIP. Eventually see if can consolidate to server.torrent.yml
+# Needs https://github.com/geerlingguy/ansible-role-php/pull/100 to work.
+
+- name: "Torrent (freebsd jail)"
+
+  hosts: servers.freebsd
+
+  vars:
+
+    nginx_fastcgi_params: "/usr/local/etc/nginx/fastcgi_params"
+    php_fpm_listen: "/var/run/php5-fpm.sock"
+
+  roles:
+
+    - name: "Torrent | admin | ensure common apps/settings"
+      role: cmprescott.common
+
+    - name: "Torrent | client | ensure rTorrent"
+      role: cmprescott.rTorrent
+      rtorrent_directory_download: "{{ path_torrent_dl }}"
+      rtorrent_other_settings:
+        - scgi_port = 127.0.0.1:5000
+
+    - name: "Torrent | web interface | ensure $PHP"
+      role: geerlingguy.php
+      sudo: yes
+      php_webserver_daemon: "nginx"
+      php_enable_php_fpm: true
+
+    - name: "Torrent | web interface | ensure Nginx"
+      role: jdauphant.nginx
+      sudo: yes
+      nginx_http_params:
+        - sendfile on
+        - access_log /var/log/nginx/access.log
+      nginx_sites:
+        rutorrent:
+          - listen 80
+          - server_name localhost
+          - root /var/www
+          - location / { try_files $uri $uri/ =404; }
+          - location ~ \.php$ { fastcgi_split_path_info ^(.+\.php)(/.+)$; fastcgi_pass unix:{{ php_fpm_listen }}; fastcgi_index index.php; include fastcgi_params; }
+          - location /RPC2 { include scgi_params; scgi_pass 127.0.0.1:5000; }
+
+    - name: "Torrent | web interface | ensure ruTorrent"
+      role: cmprescott.ruTorrent
+      rutorrent_dir_install_group: www
+      rutorrent_dir_install_owner: www
+
+  post_tasks:
+
+    - name: "Torrent | web interface | 1 offs that some systems need."
+      sudo: yes
+      lineinfile: dest="{{ nginx_fastcgi_params }}"  line="{{ item }}"  state=present
+      with_items:
+        - "fastcgi_param SCRIPT_FILENAME $document_rootfastcgi_script_name;"
+        - "fastcgi_param PATH_TRANSLATED $document_root$fastcgi_script_name;"
+      notify: "restart nginx"
+
+...
