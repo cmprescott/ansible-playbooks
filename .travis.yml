@@ -1,31 +1,34 @@
 ---
 language: python
+
 python: "2.7"
+
 before_install:
- - sudo apt-get update -qq
- - sudo apt-get install -qq python-apt python-pycurl
+  - sudo apt-get update -qq
+  - sudo apt-get install -qq python-apt python-pycurl
+
 install:
-  - sudo pip install ansible==1.8.4
+  - sudo pip install ansible==2.0.0.2
+
 script:
-  # inventory file
-  - echo [clients.media] >> inventory
+
+  # Inventory file
+  - echo [clients.nfs] >> inventory
   - echo localhost >> inventory
-  - echo [servers.media] >> inventory
-  - echo localhost >> inventory
-  - echo [servers.freebsd] >> inventory
-  - echo localhost >> inventory
-  - echo [servers.router] >> inventory
+  - echo [clients.torrent] >> inventory
   - echo localhost >> inventory
   - echo [servers.torrent] >> inventory
   - echo localhost >> inventory
+  - echo [servers.wordpress] >> inventory
+  - echo localhost >> inventory
+
   # Dependencies
   - ansible-galaxy -r .requirements.yml
-  # clients
-  # - ansible-playbook -i inventory client.desktop.yml --syntax-check --list-tasks
-  # - ansible-playbook -i inventory client.developer.ansible.yml --syntax-check --list-tasks
-  - ansible-playbook -i inventory client.media.yml --syntax-check --list-tasks
-  # servers
-  - ansible-playbook -i inventory server.media.yml --syntax-check --list-tasks
-  - ansible-playbook -i inventory server.router.yml --syntax-check --list-tasks
-  - ansible-playbook -i inventory server.torrent-freebsd.yml --syntax-check --list-tasks
+
+  # Clients
+  - ansible-playbook -i inventory client.nfs.yml --syntax-check --list-tasks
+  - ansible-playbook -i inventory client.torrent.yml --syntax-check --list-tasks
+
+  # Servers
   - ansible-playbook -i inventory server.torrent.yml --syntax-check --list-tasks
+  # ansible-playbook -i inventory server.wordpress.yml --syntax-check --list-tasks

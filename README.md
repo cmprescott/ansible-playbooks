@@ -1,7 +1,6 @@
 # Ansible Playbooks
 
-My playbooks I use to configure my computers. Server playbooks intended for apt-based OS. Client playbooks intended for
-apt-based OS & Mac OS X.
+My playbooks I use to configure my computers.
 
 ## Usage
 
@@ -9,51 +8,21 @@ See .travis.yml for examples of installating requirements and usage.
 
 ## Playbooks
 
-### client.desktop
+### client.nfs
 
-- [ ] backup (rsync, scripts)
-- [ ] file shares (autoFS)
-- [ ] UI fixes (Elementary OS Plank, MacOSX bad edid, etc)
-- [ ] web browser (Google Chrome)
+bind + nfs + autofs
 
-### client.developer
+### client.torrent
 
-- [ ] administration (bash, byobu, tree, etc)
-- [ ] scm (SmartGit)
-- [ ] editor (SublimeText, SublimeText PackageControl)
-
-### client.media
-
-- [X] media playback (Kodi)
-- [ ] TV playback (tuner, tvheadend, mc2xml)
-
-### server.media
-
-- [X] administration (bash, byobu, tree, etc)
-- [X] hard-drive mounts
-- [X] bind mounts
-- [X] linux shares (nfs)
-- [X] Kodi (mySQL db)
-- [ ] nfs authentication
-- [ ] windows shares (samba)
-
-### server.router 
-
-- [X] administration (bash, byobu, tree, etc)
-- [X] WAN/LAN (interfaces)
-- [X] DHCP/DNS (dnsmasq)
-- [X] firewall (FireHOL)
-- [ ] management (dnsmasq DHCP options)
-- [ ] monitoring (Monit)
-- [ ] exposure (Open-vpn)
+byobu + rtorrent + unzip/unrar + FileBot
 
 ### server.torrent 
 
-- [X] administration (bash, byobu, tree, etc)
-- [X] torrenting (rTorrent)
-- [X] web interface (nginx, php, ruTorrent)
-- [X] file management (JRE  1.8, FileBot)
-- [ ] enhance web interface (ruTorrent plugins)
+php + nginx + ruTorrent
+
+### server.wordpress
+
+LEMP (nginx, php, mysql) + WordPress via wp-cli
 
 ## Author
 

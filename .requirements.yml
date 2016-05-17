@@ -6,35 +6,15 @@
 
 # client.torrent
 # --------------
+- src: cmprescott.common
 - src: cmprescott.rTorrent
 - src: cmprescott.jre
 - src: cmprescott.FileBot
 
-# client.media
-# ------------
-- src: cmprescott.kodi
-- src: cmprescott.mc2xml
-- src: cmprescott.tvheadend
-- src: cmprescott.HDHomeRun
-
 # server.*
 # --------
-- src: cmprescott.common
-- src: geerlingguy.mysql
 - src: geerlingguy.php
-  version: 1.9.1
 - src: jdauphant.nginx
-
-# server.media
-# -----------
-- src: MichaelRigart.mount
-- src: geerlingguy.nfs
-
-# server.router
-# -------------
-- src: cmprescott.dnsmasq
-- src: cmprescott.FireHOL
-- src: debops.ifupdown
 
 # server.torrent
 # --------------
@@ -42,6 +22,7 @@
 
 # server.wordpress
 # ----------------
+- src: geerlingguy.mysql
 - src: heskethm.wp-cli
 
 ...
