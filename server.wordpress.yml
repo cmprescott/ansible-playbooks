@@ -2,10 +2,10 @@
 # file: server.wordpress.yml
 #
 # DESCRIPTION : Wordpress running on the LEMP stack
-# ANSIBLE VER : 1.8.4
+# ANSIBLE VER : 2.0.0.2
 # TARGET OS   : Ubuntu 14.04
 
-- name: "wordpress"
+- name: "Wordpress Server"
 
   hosts: servers.wordpress
 
@@ -30,11 +30,8 @@
 
   roles:
 
-    - name: "Wordpress | admin | ensure common apps/settings"
-      role: cmprescott.common
-
     - name: "Wordpress | LEMP | ensure mysql & mysql users"
-      sudo: yes
+      become: yes
       role: geerlingguy.mysql
       mysql_databases:
         - name: "{{ wordpress_db }}"
@@ -44,7 +41,7 @@
           priv: "*.*:ALL"
 
     - name: "Wordpress | LEMP | ensure $PHP"
-      sudo: yes
+      become: yes
       role: geerlingguy.php
       php_packages:
         - libssh2-php
@@ -56,7 +53,7 @@
       php_enable_php_fpm: true
 
     - name: "Wordpress | LEMP | ensure Nginx"
-      sudo: yes
+      become: yes
       role: jdauphant.nginx
       nginx_http_params:
         - access_log /var/log/nginx/access.log
@@ -70,7 +67,7 @@
           - location ~ \.php$ { fastcgi_split_path_info ^(.+\.php)(/.+)$; fastcgi_pass unix:{{ php_fpm_listen }}; fastcgi_index index.php; include fastcgi_params; }
 
     - name: "Wordpress | ensure wordpress cli"
-      sudo: yes
+      become: yes
       role: heskethm.wp-cli
 
   post_tasks:
@@ -80,8 +77,8 @@
       register: wp_dir
 
     # wordpress installation
-    - name: "PreTask | temporarily allow all to wrx to our wordpress install dir"
-      sudo: yes
+    - name: "PostTask | temporarily allow all to wrx to our wordpress install dir"
+      become: yes
       file: path="{{ wordpress_path }}" owner=www-data group=www-data mode=777 state=directory
       when: wp_dir.stat.isdir is not defined
 
@@ -114,11 +111,11 @@
 
     # ensure most basic security
     - name: "PostTask | Ensure nginx ownership"
-      sudo: yes
+      become: yes
       file: path="{{ wordpress_path }}" owner=www-data group=www-data recurse=yes
 
     - name: "PostTask | Ensure website dir not all writeable"
-      sudo: yes
+      become: yes
       file: path="{{ wordpress_path }}" owner=www-data group=www-data mode=0775 state=directory
 
 ...
