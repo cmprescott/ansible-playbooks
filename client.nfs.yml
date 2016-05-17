@@ -1,0 +1,54 @@
+---
+# file: client.nfs.yml
+#
+# DESCRIPTION : TODO
+# ANSIBLE VER : 2.0.
+# TARGET OS   : Ubuntu 14.04
+- name: "NFS Client"
+
+  hosts: clients.nfs
+
+  vars:
+
+    # Constants
+    NFS_FSTYPE: "nfs,rw,bg,hard,intr,tcp,resvport"
+
+    # NFS Client settings
+    nfs_indirect_map_name: auto.nfs
+    nfs_mount_path: /mnt/nfs
+
+    # NFS Server settings
+    nfs_server: freenas.chrisprescott.net
+    nfs_path_movies: /mnt/mir_4000/media/Movies
+    nfs_path_tv: /mnt/mir_4000/media/TV
+    nfs_path_rtorrent: /mnt/mir_4000/srv/rtorrent
+
+  pre_tasks:
+
+    - name: "PreTask | ensure nfs client package(s) present"
+      become: yes
+      apt: name="{{ item }}"
+      with_items:
+        - rpcbind
+        - nfs-common
+
+  roles:
+
+    - name: "NFS | ensure automounts"
+      become: yes
+      role: cmprescott.autofs
+      autofs_indirect_maps:
+        - name: "{{ nfs_indirect_map_name }}"
+          path: "{{ nfs_mount_path }}"
+          mounts:
+            - name: "{{ nfs_path_movies | basename }}"
+              fstype: "{{ NFS_FSTYPE }}"
+              url: "{{ nfs_server }}:{{ nfs_path_movies }}"
+            - name: "{{ nfs_path_tv | basename }}"
+              fstype: "{{ NFS_FSTYPE }}"
+              url: "{{ nfs_server }}:{{ nfs_path_tv }}"
+            - name: "{{ nfs_path_rtorrent | basename }}"
+              fstype: "{{ NFS_FSTYPE }}"
+              url: "{{ nfs_server }}:{{ nfs_path_rtorrent }}"
+
+...

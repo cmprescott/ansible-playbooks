@@ -1,5 +1,9 @@
 ---
 
+# client.nfs
+# ----------
+- src: cmprescott.autofs
+
 # client.media
 # ------------
 - src: cmprescott.kodi
