@@ -1,54 +1,27 @@
 ---
 # file: server.torrent.yml
+#
+# DESCRIPTION : TODO
+# ANSIBLE VER : 2.0.
+# TARGET OS   : Ubuntu 14.04
 
-- name: "Torrent"
+- name: "Torrent Server"
 
   hosts: servers.torrent
 
   vars:
 
-    # overrides / hacks for other people's roles
-    ansible_os_family_override: Debian
-
-    # env specific
-    path_drive_storage: /media/cp/4tb
-    path_movies: "{{ path_drive_storage }}/Movies"
-    path_torrent_dl: "{{ path_drive_storage }}/rtorrent/download"
-    path_tv: "{{ path_drive_storage }}/TV"
-    path_user_log: ~/log
-    path_user_bin: ~/bin
-
-  pre_tasks:
-
-    - name: "PreTask | ensure dependency directories"
-      file: path={{ item }}  state=directory
-      with_items:
-        - "{{ path_user_log }}"
-        - "{{ path_user_bin }}"
-        - ~/rtorrent
-    
-    - name: "PreTask | ensure rtorrent download link"
-      file: path=~/rtorrent/download src={{ path_torrent_dl }} state=link
+    # vars shared between roles
+    php_fpm_listen: "/var/run/php5-fpm.sock"
 
   roles:
-
-    - name: "Torrent | admin | ensure common apps/settings"
-      role: cmprescott.common
-
-    - name: "Torrent | client | ensure rTorrent"
-      role: cmprescott.rTorrent
-      rtorrent_directory_download: "{{ path_torrent_dl }}"
-      rtorrent_other_settings:
-        - scgi_port = 127.0.0.1:5000
-        - 'system.method.set_key=event.download.finished,filebot_amc,"execute={~/bin/filebot.amc.sh,$d.get_base_path=,$d.get_name=,$d.get_custom1=}"'
 
     - name: "Torrent | web interface | ensure ruTorrent"
       role: cmprescott.ruTorrent
 
     - name: "Torrent | web interface | ensure $PHP"
       role: geerlingguy.php
-      sudo: yes
-      ansible_os_family: "{{ ansible_os_family_override }}"
+      become: yes
       php_packages:
         - php5-cli
         - php5-fpm
@@ -58,8 +31,7 @@
 
     - name: "Torrent | web interface | ensure Nginx"
       role: jdauphant.nginx
-      sudo: yes
-      ansible_os_family: "{{ ansible_os_family_override }}"
+      become: yes
       nginx_http_params:
         - sendfile on
         - access_log /var/log/nginx/access.log
@@ -69,31 +41,7 @@
           - server_name localhost
           - root /var/www
           - location / { try_files $uri $uri/ =404; }
-          - location ~ \.php$ { fastcgi_split_path_info ^(.+\.php)(/.+)$; fastcgi_pass unix:/var/run/php5-fpm.sock; fastcgi_index index.php; include fastcgi_params; }
+          - location ~ \.php$ { fastcgi_split_path_info ^(.+\.php)(/.+)$; fastcgi_pass unix:{{ php_fpm_listen }}; fastcgi_index index.php; include fastcgi_params; }
           - location /RPC2 { include scgi_params; scgi_pass 127.0.0.1:5000; }
-
-    - name: "Torrent | file mgmt | Install Java 8 JRE dependency"
-      role: cmprescott.jre
-
-    - name: "Torrent | file mgmt | Install FileBot & config AMC script"
-      role: cmprescott.FileBot
-      filebot_amc_path: "{{ path_user_bin }}/filebot.amc.sh"
-      filebot_amc_inputs:
-        - 'TORRENT_PATH=$1'
-        - 'TORRENT_NAME=$2'
-        - 'TORRENT_LABEL=$3'
-      filebot_amc_cli_args:
-        - 'log-file {{ path_user_log }}/amc.log'
-        - 'action copy'
-        - 'conflict override -non-strict'
-      filebot_amc_defs:
-        - 'music=y'
-        - 'artwork=y'
-        - '"seriesFormat={{ path_tv }}/{n}/Season {s.pad(2)}/{n}.{s00e00}.{t} ({y})"'
-        - '"movieFormat={{ path_movies }}/{n} ({y})/{n}"'
-        - '"ut_dir=$TORRENT_PATH"'
-        - '"ut_kind=multi"'
-        - '"ut_title=$TORRENT_NAME"'
-        - '"ut_label=$TORRENT_LABEL"'
 
 ...

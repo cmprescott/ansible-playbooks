@@ -1,0 +1,74 @@
+---
+# file: client.torrent.yml
+#
+# DESCRIPTION : TODO
+# ANSIBLE VER : 2.0.
+# TARGET OS   : Ubuntu 14.04
+
+- name: "Torrent Client"
+
+  hosts: clients.torrent
+
+  vars:
+
+    # general settings
+    path_drive_storage: /mnt/nfs
+
+    # rTorrent
+    path_torrent_dl: "{{ path_drive_storage }}/rtorrent/download"
+    path_torrent_session: "{{ path_drive_storage }}/rtorrent/.session"
+    path_torrent_watch: "{{ path_drive_storage }}/rtorrent/watch"
+    path_user_log: ~/log
+    path_user_bin: ~/bin
+
+    # Filebot
+    path_movies: "{{ path_drive_storage }}/Movies"
+    path_tv: "{{ path_drive_storage }}/TV"
+
+  pre_tasks:
+
+    - name: "PreTask | ensure dependency directories"
+      file: path={{ item }}  state=directory
+      with_items:
+        - "{{ path_user_log }}"
+        - "{{ path_user_bin }}"
+
+  roles:
+
+    - name: "Torrent | admin | ensure common apps/settings"
+      role: cmprescott.common
+
+    - name: "Torrent | client | ensure rTorrent"
+      role: cmprescott.rTorrent
+      rtorrent_directory_download: "{{ path_torrent_dl }}"
+      rtorrent_directory_session: "{{ path_torrent_session }}"
+      rtorrent_directory_watch: "{{ path_torrent_watch }}"
+      rtorrent_other_settings:
+        - scgi_port = 127.0.0.1:5000
+        - 'system.method.set_key=event.download.finished,filebot_amc,"execute={~/bin/filebot.amc.sh,$d.get_base_path=,$d.get_name=,$d.get_custom1=}"'
+
+    - name: "Torrent | file mgmt | Install Java 8 JRE dependency"
+      role: cmprescott.jre
+
+    - name: "Torrent | file mgmt | Install FileBot & config AMC script"
+      role: cmprescott.FileBot
+      filebot_amc_path: "{{ path_user_bin }}/filebot.amc.sh"
+      filebot_amc_inputs:
+        - 'TORRENT_PATH=$1'
+        - 'TORRENT_NAME=$2'
+        - 'TORRENT_LABEL=$3'
+      filebot_amc_cli_args:
+        - 'log-file {{ path_user_log }}/amc.log'
+        - 'action copy'
+        - 'conflict override -non-strict'
+      filebot_amc_defs:
+        - 'music=y'
+        - 'artwork=y'
+        - '"seriesFormat={{ path_tv }}/{n}/Season {s.pad(2)}/{n}.{s00e00}.{t} ({y})"'
+        - '"movieFormat={{ path_movies }}/{n} ({y})/{n}"'
+        - '"ut_dir=$TORRENT_PATH"'
+        - '"ut_kind=multi"'
+        - '"ut_title=$TORRENT_NAME"'
+        - '"ut_label=$TORRENT_LABEL"'
+
+...

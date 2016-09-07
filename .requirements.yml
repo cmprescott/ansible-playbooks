@@ -4,6 +4,12 @@
 # ----------
 - src: cmprescott.autofs
 
+# client.torrent
+# --------------
+- src: cmprescott.rTorrent
+- src: cmprescott.jre
+- src: cmprescott.FileBot
+
 # client.media
 # ------------
 - src: cmprescott.kodi
@@ -32,10 +38,7 @@
 
 # server.torrent
 # --------------
-- src: cmprescott.rTorrent
 - src: cmprescott.ruTorrent
-- src: cmprescott.jre
-- src: cmprescott.FileBot
 
 # server.wordpress
 # ----------------
