@@ -3,7 +3,7 @@
 #
 # DESCRIPTION : TODO
 # ANSIBLE VER : 2.0.
-# TARGET OS   : Ubuntu 14.04
+# TARGET OS   : Ubuntu 16.04
 
 - name: "Torrent Server"
 
@@ -12,22 +12,12 @@
   vars:
 
     # vars shared between roles
-    php_fpm_listen: "/var/run/php5-fpm.sock"
+    php_fpm_listen: "/var/run/php7.0-fpm.sock"
 
   roles:
 
     - name: "Torrent | web interface | ensure ruTorrent"
       role: cmprescott.ruTorrent
-
-    - name: "Torrent | web interface | ensure $PHP"
-      role: geerlingguy.php
-      become: yes
-      php_packages:
-        - php5-cli
-        - php5-fpm
-        - php5-geoip
-      php_webserver_daemon: "nginx"
-      php_enable_php_fpm: true
 
     - name: "Torrent | web interface | ensure Nginx"
       role: jdauphant.nginx
@@ -41,7 +31,17 @@
           - server_name localhost
           - root /var/www
           - location / { try_files $uri $uri/ =404; }
-          - location ~ \.php$ { fastcgi_split_path_info ^(.+\.php)(/.+)$; fastcgi_pass unix:{{ php_fpm_listen }}; fastcgi_index index.php; include fastcgi_params; }
+          - location ~ \.php$ { fastcgi_split_path_info ^(.+\.php)(/.+)$; fastcgi_pass unix:{{ php_fpm_listen }}; fastcgi_index index.php; fastcgi_param SCRIPT_FILENAME $request_filename; include fastcgi_params; }
           - location /RPC2 { include scgi_params; scgi_pass 127.0.0.1:5000; }
+
+    - name: "Torrent | web interface | ensure $PHP"
+      role: geerlingguy.php
+      become: yes
+      php_packages:
+        - php7.0-cli
+        - php7.0-fpm
+        - php-geoip
+      php_webserver_daemon: "nginx"
+      php_enable_php_fpm: true
 
 ...
