@@ -11,9 +11,12 @@
 - src: cmprescott.jre
 - src: cmprescott.FileBot
 
-# server.*
+# server.gitlab
 # --------
-- src: geerlingguy.php
+- name: "ansible-role-gitlab"
+  src: samdoran.gitlab
+- name: "ansible-role-ssl-certs"
+  src: jdauphant.ssl-certs
 
 # server.jenkins
 # --------
@@ -26,6 +29,8 @@
 
 # server.torrent
 # --------------
+- src: jdauphant.nginx
+- src: geerlingguy.php
 - src: cmprescott.ruTorrent
 
 # server.wordpress
