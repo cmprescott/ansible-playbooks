@@ -1,0 +1,46 @@
+# file: server.gitlab.yml
+#
+# DESCRIPTION : Gitlab behind reverse proxy for ssl
+# ANSIBLE VER : 2.0.
+# TESTED OS   : CentOS 7
+---
+- name: "Gitlab server"
+  hosts: servers.gitlab
+  vars:
+
+    # Host specific
+    # -------------
+    # ssl_certs_local_privkey_data: CHANGE_IT
+    # ssl_certs_local_cert_data: CHANGE_IT
+
+  handlers:
+
+    - name: "restart firewalld"
+      service: name=firewalld state=restarted
+
+  pre_tasks:
+
+    - name: "Gitlab | Ensure host in /etc/hosts"
+      lineinfile: dest=/etc/hosts line="{{ ansible_default_ipv4.address }} {{ ansible_hostname }} {{ ansible_fqdn }}" state=present
+      tags: network
+
+  roles:
+
+    - name: "Jenkins | Ensure self signed openssl certificate"
+      role: ansible-role-ssl-certs
+      ssl_certs_path_owner: root
+      ssl_certs_path_group: root
+
+    - name: "Gitlab | Ensure Gitlab"
+      role: ansible-role-gitlab
+      gitlab_days_old_backups: 7
+      gitlab_nginx_ssl_enabled: True
+      gitlab_nginx_ssl_certificate_path: "{{ ssl_certs_cert_path }}"
+      gitlab_nginx_ssl_certificate_key_path: "{{ ssl_certs_privkey_path }}"
+
+  post_tasks:
+
+    - name: "Gitlab | Ensure outside https traffic can get in"
+      firewalld: service=https zone=public permanent=true state=enabled
+      notify: restart firewalld
+...
