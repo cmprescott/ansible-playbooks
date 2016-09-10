@@ -1,7 +1,7 @@
 ---
 # file: server.torrent.yml
 #
-# DESCRIPTION : TODO
+# DESCRIPTION : Installs http server for ruTorrent
 # ANSIBLE VER : 2.0.
 # TARGET OS   : Ubuntu 16.04
 
@@ -30,9 +30,20 @@
           - listen 80
           - server_name localhost
           - root /var/www
-          - location / { try_files $uri $uri/ =404; }
-          - location ~ \.php$ { fastcgi_split_path_info ^(.+\.php)(/.+)$; fastcgi_pass unix:{{ php_fpm_listen }}; fastcgi_index index.php; fastcgi_param SCRIPT_FILENAME $request_filename; include fastcgi_params; }
-          - location /RPC2 { include scgi_params; scgi_pass 127.0.0.1:5000; }
+          - location / { 
+              try_files $uri $uri/ =404; 
+            }
+          - location ~ \.php$ { 
+              fastcgi_split_path_info ^(.+\.php)(/.+)$; 
+              fastcgi_pass unix:{{ php_fpm_listen }}; 
+              fastcgi_index index.php; 
+              fastcgi_param SCRIPT_FILENAME $request_filename; 
+              include fastcgi_params; 
+            }
+          - location /RPC2 { 
+              include scgi_params; 
+              scgi_pass 127.0.0.1:5000; 
+            }
 
     - name: "Torrent | web interface | ensure $PHP"
       role: ansible-role-php
