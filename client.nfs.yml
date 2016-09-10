@@ -1,14 +1,21 @@
 ---
 # file: client.nfs.yml
 #
-# DESCRIPTION : TODO
+# DESCRIPTION : Installs NFS mounts to fileserver for rtorrent.
 # ANSIBLE VER : 2.0.
-# TARGET OS   : Ubuntu 14.04
+# TARGET OS   : Ubuntu 16.04
 - name: "NFS Client"
 
   hosts: clients.nfs
 
   vars:
+
+    # Host specific
+    # -------------
+    # nfs_server: CHANGEIT.net
+    # nfs_path_movies: /home/CHANGEIT/Movies
+    # nfs_path_tv: /home/CHANGEIT/media/TV
+    # nfs_path_rtorrent: /home/CHANGEIT/rtorrent
 
     # Constants
     NFS_FSTYPE: "nfs,rw,bg,hard,intr,tcp,resvport"
@@ -16,12 +23,6 @@
     # NFS Client settings
     nfs_indirect_map_name: auto.nfs
     nfs_mount_path: /mnt/nfs
-
-    # NFS Server settings
-    nfs_server: freenas.chrisprescott.net
-    nfs_path_movies: /mnt/mir_4000/media/Movies
-    nfs_path_tv: /mnt/mir_4000/media/TV
-    nfs_path_rtorrent: /mnt/mir_4000/srv/rtorrent
 
   pre_tasks:
 
@@ -31,6 +32,7 @@
       with_items:
         - rpcbind
         - nfs-common
+      when: ansible_pkg_mgr == 'apt'
 
   roles:
 
