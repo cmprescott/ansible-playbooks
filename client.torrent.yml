@@ -2,8 +2,8 @@
 # file: client.torrent.yml
 #
 # DESCRIPTION : TODO
-# ANSIBLE VER : 2.0.
-# TARGET OS   : Ubuntu 14.04
+# ANSIBLE VER : 2.1.1.0
+# TARGET OS   : Ubuntu 16.04
 
 - name: "Torrent Client"
 
@@ -36,10 +36,10 @@
   roles:
 
     - name: "Torrent | admin | ensure common apps/settings"
-      role: cmprescott.common
+      role: ansible-role-common
 
     - name: "Torrent | client | ensure rTorrent"
-      role: cmprescott.rTorrent
+      role: ansible-role-rtorrent
       rtorrent_directory_download: "{{ path_torrent_dl }}"
       rtorrent_directory_session: "{{ path_torrent_session }}"
       rtorrent_directory_watch: "{{ path_torrent_watch }}"
@@ -48,10 +48,10 @@
         - 'system.method.set_key=event.download.finished,filebot_amc,"execute={~/bin/filebot.amc.sh,$d.get_base_path=,$d.get_name=,$d.get_custom1=}"'
 
     - name: "Torrent | file mgmt | Install Java 8 JRE dependency"
-      role: cmprescott.jre
+      role: ansible-role-jre
 
     - name: "Torrent | file mgmt | Install FileBot & config AMC script"
-      role: cmprescott.FileBot
+      role: ansible-role-filebot
       filebot_amc_path: "{{ path_user_bin }}/filebot.amc.sh"
       filebot_amc_inputs:
         - 'TORRENT_PATH=$1'

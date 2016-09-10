@@ -36,7 +36,7 @@
 
     - name: "NFS | ensure automounts"
       become: yes
-      role: cmprescott.autofs
+      role: ansible-role-autofs
       autofs_indirect_maps:
         - name: "{{ nfs_indirect_map_name }}"
           path: "{{ nfs_mount_path }}"

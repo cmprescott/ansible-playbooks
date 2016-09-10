@@ -17,10 +17,10 @@
   roles:
 
     - name: "Torrent | web interface | ensure ruTorrent"
-      role: cmprescott.ruTorrent
+      role: ansible-role-rutorrent
 
     - name: "Torrent | web interface | ensure Nginx"
-      role: jdauphant.nginx
+      role: ansible-role-nginx
       become: yes
       nginx_http_params:
         - sendfile on
@@ -35,7 +35,7 @@
           - location /RPC2 { include scgi_params; scgi_pass 127.0.0.1:5000; }
 
     - name: "Torrent | web interface | ensure $PHP"
-      role: geerlingguy.php
+      role: ansible-role-php
       become: yes
       php_packages:
         - php7.0-cli

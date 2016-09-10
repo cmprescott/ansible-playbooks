@@ -11,8 +11,8 @@
 
   vars:
 
-    # env specific
-    # TODO: inventory doesn't override?
+    # Host specific
+    # -------------
     # website_admin_user: CHANGE_IT
     # website_admin_pass: CHANGE_IT
     # website_admin_email: CHANGE_IT@CHANGE_IT.com
@@ -32,7 +32,7 @@
 
     - name: "Wordpress | LEMP | ensure mysql & mysql users"
       become: yes
-      role: geerlingguy.mysql
+      role: ansible-role-mysql
       mysql_databases:
         - name: "{{ wordpress_db }}"
       mysql_users:
@@ -42,7 +42,7 @@
 
     - name: "Wordpress | LEMP | ensure $PHP"
       become: yes
-      role: geerlingguy.php
+      role: ansible-role-php
       php_packages:
         - libssh2-php
         - php5-cli
@@ -54,7 +54,7 @@
 
     - name: "Wordpress | LEMP | ensure Nginx"
       become: yes
-      role: jdauphant.nginx
+      role: ansible-role-nginx
       nginx_http_params:
         - access_log /var/log/nginx/access.log
       nginx_sites:
@@ -68,7 +68,7 @@
 
     - name: "Wordpress | ensure wordpress cli"
       become: yes
-      role: heskethm.wp-cli
+      role: ansible-role-wp-cli
 
   post_tasks:
 

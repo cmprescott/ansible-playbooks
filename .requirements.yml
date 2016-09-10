@@ -1,41 +1,29 @@
 # .requirements.yml
 ---
-# client.nfs
-# ----------
-- src: cmprescott.autofs
-
-# client.torrent
-# --------------
-- src: cmprescott.common
-- src: cmprescott.rTorrent
-- src: cmprescott.jre
-- src: cmprescott.FileBot
-
-# server.gitlab
-# --------
+- name: "ansible-role-autofs"
+  src: cmprescott.autofs
+- name: "ansible-role-common"
+  src: cmprescott.common
+- name: "ansible-role-filebot"
+  src: cmprescott.FileBot
 - name: "ansible-role-gitlab"
   src: samdoran.gitlab
-- name: "ansible-role-ssl-certs"
-  src: jdauphant.ssl-certs
-
-# server.jenkins
-# --------
 - name: "ansible-role-jenkins"
   src: geerlingguy.jenkins
+- name: "ansible-role-jre"
+  src: cmprescott.jre
+- name: "ansible-role-mysql"
+  src: geerlingguy.mysql
 - name: "ansible-role-nginx"
   src: jdauphant.nginx
+- name: "ansible-role-php"
+  src: geerlingguy.php
+- name: "ansible-role-rtorrent"
+  src: cmprescott.rTorrent
+- name: "ansible-role-rutorrent"
+  src: cmprescott.ruTorrent
 - name: "ansible-role-ssl-certs"
   src: jdauphant.ssl-certs
-
-# server.torrent
-# --------------
-- src: jdauphant.nginx
-- src: geerlingguy.php
-- src: cmprescott.ruTorrent
-
-# server.wordpress
-# ----------------
-- src: geerlingguy.mysql
-- src: heskethm.wp-cli
-
+- name: "ansible-role-wp-cli"
+  src: heskethm.wp-cli
 ...
