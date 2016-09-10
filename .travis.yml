@@ -17,6 +17,8 @@ script:
   - echo localhost >> inventory
   - echo [clients.torrent] >> inventory
   - echo localhost >> inventory
+  - echo [servers.jenkins] >> inventory
+  - echo localhost >> inventory
   - echo [servers.torrent] >> inventory
   - echo localhost >> inventory
   - echo [servers.wordpress] >> inventory
@@ -30,5 +32,6 @@ script:
   - ansible-playbook -i inventory client.torrent.yml --syntax-check --list-tasks
 
   # Servers
+  - ansible-playbook -i inventory server.jenkins.yml --syntax-check --list-tasks
   - ansible-playbook -i inventory server.torrent.yml --syntax-check --list-tasks
   # ansible-playbook -i inventory server.wordpress.yml --syntax-check --list-tasks

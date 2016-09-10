@@ -1,0 +1,87 @@
+# file: server.jenkins.yml
+#
+# DESCRIPTION : Jenkins behind reverse proxy for ssl
+# ANSIBLE VER : 2.0.
+# TESTED OS   : CentOS 7
+---
+- name: "Jenkins behind reverse proxy for ssl"
+  hosts: servers.jenkins
+  vars:
+
+    # Host specific
+    # -------------
+    # ssl_certs_local_privkey_data: CHANGE_IT
+    # ssl_certs_local_cert_data: CHANGE_IT
+
+  handlers:
+
+    - name: "restart firewalld"
+      service: name=firewalld state=restarted
+
+  pre_tasks:
+
+    - name: "Jenkins | Ensure host in /etc/hosts"
+      lineinfile: dest=/etc/hosts line="{{ ansible_default_ipv4.address }} {{ ansible_hostname }} {{ ansible_fqdn }}" state=present
+      tags: network
+
+    - name: "Jenkins | Ensure nginx group"
+      group: name="{{ nginx_group }}"
+
+    - name: "Jenkins | Ensure nginx user"
+      user: name="{{ nginx_user }}" group="{{ nginx_group }}"
+
+  roles:
+
+    - name: "Jenkins | Ensure self signed openssl certificate"
+      role: ansible-role-ssl-certs
+      ssl_certs_path_owner: "{{ nginx_user }}"
+      ssl_certs_path_group: "{{ nginx_group }}"
+      ssl_certs_generate_dh_param: true
+
+    - name: "Jenkins | Ensure nginx reverse proxy"
+      role: ansible-role-nginx
+      nginx_configs:
+        https:
+          - ssl on
+          - ssl_session_cache  builtin:1000  shared:SSL:10m
+          - ssl_protocols  TLSv1 TLSv1.1 TLSv1.2
+          - ssl_prefer_server_ciphers on
+          - ssl_certificate_key {{ ssl_certs_privkey_path }}
+          - ssl_certificate     {{ ssl_certs_cert_path }}
+          - ssl_dhparam         {{ ssl_certs_dhparam_path }}
+        upstream:
+          - upstream jenkins { server 127.0.0.1:8080 fail_timeout=0; }
+      nginx_sites:
+        default:
+          - listen 80
+          - return 301 https://$host$request_uri
+        jenkins:
+          - listen 443 ssl
+          - server_name {{ ansible_fqdn }}
+          - location / {
+             proxy_set_header   Host $host:$server_port;
+             proxy_set_header   X-Real-IP $remote_addr;
+             proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
+             proxy_set_header   X-Forwarded-Proto $scheme;
+             proxy_redirect     http:// https://;
+             proxy_pass         http://{{ ansible_hostname }};
+            }
+
+    - name: "Jenkins | Ensure Jenkins"
+      role: ansible-role-jenkins
+      jenkins_hostname: 127.0.0.1
+      jenkins_http_port: 8080
+      jenkins_plugins:
+        - credentials
+        - greenballs
+        - git
+
+  post_tasks:
+
+    - name: "Jenkins | Ensure can connect to local instance using nginx"
+      seboolean: name=httpd_can_network_connect state=yes persistent=yes
+
+    - name: "Jenkins | Ensure outside https traffic can get in"
+      firewalld: service=https zone=public permanent=true state=enabled
+      notify: restart firewalld
+...
