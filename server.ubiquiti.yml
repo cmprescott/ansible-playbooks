@@ -1,0 +1,65 @@
+# file: server.ubiquiti.yml
+#
+# DESCRIPTION : Ubiquiti Unifi controller
+# ANSIBLE VER : 2.1.1.0
+# TESTED OS   : Ubuntu 14.04
+---
+- name: "Ubiquiti Unifi server behind nginx reverse proxy"
+  hosts: servers.ubiquiti
+  vars:
+
+    # Host specific
+    # -------------
+    # ssl_certs_local_privkey_data: CHANGE_IT
+    # ssl_certs_local_cert_data: CHANGE_IT
+
+  handlers:
+  pre_tasks:
+
+    - name: "Ubiquiti | Ensure host in /etc/hosts"
+      lineinfile: dest=/etc/hosts line="{{ ansible_default_ipv4.address }} {{ ansible_hostname }} {{ ansible_fqdn }}" state=present
+      tags: network
+
+    - name: "Ubiquiti | Ensure nginx group"
+      group: name="{{ nginx_group }}"
+
+    - name: "Ubiquiti | Ensure nginx user"
+      user: name="{{ nginx_user }}" group="{{ nginx_group }}"      
+
+  roles:
+
+    - name: "Ubiquiti | Ensure self signed openssl certificate"
+      role: ansible-role-ssl-certs
+      ssl_certs_generate_dh_param: true
+    
+    - name: "Ubiquiti | Ensure nginx reverse proxy"
+      role: ansible-role-nginx
+      nginx_configs:
+        https:
+          - ssl on
+          - ssl_session_cache  builtin:1000  shared:SSL:10m
+          - ssl_protocols  TLSv1 TLSv1.1 TLSv1.2
+          - ssl_prefer_server_ciphers on
+          - ssl_certificate_key {{ ssl_certs_privkey_path }}
+          - ssl_certificate     {{ ssl_certs_cert_path }}
+          - ssl_dhparam         {{ ssl_certs_dhparam_path }}
+      nginx_sites:
+        default:
+          - listen 80
+          - return 301 https://$host$request_uri
+        ubiquiti:
+          - listen 443 ssl
+          - server_name {{ ansible_fqdn }}
+          - location / { 
+              proxy_pass https://localhost:8443;
+              proxy_redirect off;
+              proxy_set_header Host $host:$server_port;
+              proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            }
+
+    - name: "Ubiquiti | Ensure Ubiquiti Unifi"
+      role: ansible-role-ubiquiti-unifi
+
+  post_tasks:
+
+...

@@ -24,6 +24,8 @@
   src: cmprescott.ruTorrent
 - name: "ansible-role-ssl-certs"
   src: jdauphant.ssl-certs
+- name: "ansible-role-ubiquiti-unifi"
+  src: cmprescott.ubiquiti-unifi
 - name: "ansible-role-wp-cli"
   src: heskethm.wp-cli
 ...
