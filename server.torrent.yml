@@ -17,7 +17,7 @@
     # ssl_certs_local_cert_data: CHANGE_IT
 
     # vars shared between roles
-    php_fpm_listen: "/var/run/php7.0-fpm.sock"
+    php_fpm_listen: "/var/run/php-fpm.sock"
 
   pre_tasks:
 
@@ -31,9 +31,13 @@
 
     - name: "Torrent | web interface | ensure ruTorrent"
       role: ansible-role-rutorrent
+      rutorrent_dir_install_group: "{{ nginx_group }}"
+      rutorrent_dir_install_owner: "{{ nginx_user }}"
 
     - name: "Torrent | Ensure self signed openssl certificate"
       role: ansible-role-ssl-certs
+      ssl_certs_path_owner: "{{ nginx_user }}"
+      ssl_certs_path_group: "{{ nginx_group }}"      
       ssl_certs_generate_dh_param: true
 
     - name: "Torrent | web interface | ensure Nginx"
