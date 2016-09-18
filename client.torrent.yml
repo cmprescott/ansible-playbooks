@@ -70,5 +70,6 @@
         - '"ut_kind=multi"'
         - '"ut_title=$TORRENT_NAME"'
         - '"ut_label=$TORRENT_LABEL"'
+        - '"clean=y"'
 
 ...
