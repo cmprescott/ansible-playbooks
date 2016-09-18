@@ -4,7 +4,7 @@ My playbooks I use to configure my computers.
 
 ## Usage
 
-See .travis.yml for examples of installating requirements and usage.
+See .travis.yml for examples of installating requirements and usage. See individual playbooks for target OS.
 
 ## Playbooks
 
@@ -16,9 +16,21 @@ bind + nfs + autofs
 
 byobu + rtorrent + unzip/unrar + FileBot
 
+### server.gitlab 
+
+gitlab + ssl
+
+### server.jenkins 
+
+jre + nginx reverse proxy + jenkins + ssl
+
 ### server.torrent 
 
-php + nginx + ruTorrent
+php + nginx + ruTorrent + ssl
+
+### server.ubiquiti
+
+nginx reverse proxy + ssl + Ubiquti Unifi
 
 ### server.wordpress
 
