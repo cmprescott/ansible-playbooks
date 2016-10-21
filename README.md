@@ -40,6 +40,10 @@ nginx reverse proxy + ssl + Ubiquti Unifi
 
 LEMP (nginx, php, mysql) + WordPress via wp-cli
 
+### server.zoneminder
+
+LAMP (apache, php, mysql) + ssl + ZoneMinder via zmrepo
+
 ## Author
 
 Prescott Chris

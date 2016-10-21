@@ -1,0 +1,51 @@
+---
+# file: server.zoneminder.yml
+#
+# DESCRIPTION : Zoneminder running on the LAMP stack
+# ANSIBLE VER : 2.0.0.2
+# TARGET OS   : Centos 6
+- name: "Zoneminder Server"
+  hosts: servers.zoneminder
+  vars:
+
+    # Host specific
+    # -------------
+    # ssl_certs_local_privkey_data: CHANGE_IT
+    # ssl_certs_local_cert_data: CHANGE_IT
+
+  handlers:
+
+    - name: "restart iptables"
+      service: name=iptables state=restarted
+
+  roles:
+
+    - name: "Ensure self signed cert"
+      role: ansible-role-ssl-certs
+      ssl_certs_path_owner: "root"
+      ssl_certs_path_group: "root"      
+
+    - name: "Ensure Apache httpd"
+      role: ansible-role-apache
+      apache_vhosts_ssl:
+        - name: "Use cert from role above"
+          servername: "{{ ansible_fqdn }}"
+          documentroot: "/usr/share/zoneminder/www"
+          certificate_file: "{{ ssl_certs_cert_path }}"
+          certificate_key_file: "{{ ssl_certs_privkey_path }}"
+
+    - name: "Ensure MySQL"
+      role: ansible-role-mysql
+
+    - name: "Ensure PHP"
+      role: ansible-role-php
+
+    - name: "Ensure ZoneMinder"
+      role: ../ansible-role-zoneminder
+
+  post_tasks:
+
+    - name: "ZoneMinder | Ensure outside https traffic can get in"
+      iptables: chain=INPUT protocol=tcp match=tcp destination_port=443 jump=ACCEPT 
+      notify: restart iptables
+...
