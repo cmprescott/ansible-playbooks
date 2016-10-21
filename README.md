@@ -24,6 +24,10 @@ gitlab + ssl
 
 jre + nginx reverse proxy + jenkins + ssl
 
+### server.nexus
+
+apache reverse proxy + Nexus 3 + ssl
+
 ### server.torrent 
 
 php + nginx + ruTorrent + ssl

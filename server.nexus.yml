@@ -1,0 +1,49 @@
+# file: server.nexus.yml
+#
+# DESCRIPTION : Nexus 3 behind apache reverse proxy for ssl
+# ANSIBLE VER : 2.0.?
+# TESTED OS   : CentOS 7
+---
+- name: "Nexus 3 Server"
+  hosts: servers.nexus
+  vars:
+
+    # Host specific
+    # -------------
+    # ssl_certs_local_privkey_data: CHANGE_IT
+    # ssl_certs_local_cert_data: CHANGE_IT
+
+  handlers:
+
+    - name: "restart firewalld"
+      service: name=firewalld state=restarted
+
+  pre_tasks:
+
+    - name: "Nexus | Ensure host in /etc/hosts"
+      lineinfile: dest=/etc/hosts line="{{ ansible_default_ipv4.address }} {{ ansible_hostname }} {{ ansible_fqdn }}" state=present
+      tags: network
+
+  roles:
+
+    - name: "Nexus | Ensure Java 8 JRE"
+      role: ansible-role-jre
+
+    - name: "Nexus | Ensure httpd reverse proxy"
+      role: ansible-role-apache
+      apache_create_vhosts: no
+    
+    - name: "Nexus | Ensure Nexus 3"
+      role: ansible-role-nexus3-oss
+      httpd_setup_enable: true
+      httpd_ssl_certificate_file: "files/{{ ansible_fqdn }}.pem"
+      httpd_ssl_certificate_key_file: "files/{{ ansible_fqdn }}.key"
+      nexus_admin_password: admin123
+      public_hostname: "{{ ansible_fqdn }}"
+
+  post_tasks:
+
+    - name: "Nexus | Ensure outside https traffic can get in"
+      firewalld: service=https zone=public permanent=true state=enabled
+      notify: restart firewalld
+...

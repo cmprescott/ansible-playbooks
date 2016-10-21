@@ -1,5 +1,7 @@
 # .requirements.yml
 ---
+- name: "ansible-role-apache" 
+  src: geerlingguy.apache
 - name: "ansible-role-autofs"
   src: cmprescott.autofs
 - name: "ansible-role-common"
@@ -14,6 +16,8 @@
   src: cmprescott.jre
 - name: "ansible-role-mysql"
   src: geerlingguy.mysql
+- name: "ansible-role-nexus3-oss"
+  src: savoirfairelinux.nexus3-oss
 - name: "ansible-role-nginx"
   src: jdauphant.nginx
 - name: "ansible-role-php"
