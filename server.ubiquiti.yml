@@ -36,7 +36,6 @@
       role: ansible-role-nginx
       nginx_configs:
         https:
-          - ssl on
           - ssl_session_cache  builtin:1000  shared:SSL:10m
           - ssl_protocols  TLSv1 TLSv1.1 TLSv1.2
           - ssl_prefer_server_ciphers on
@@ -50,6 +49,7 @@
         ubiquiti:
           - listen 443 ssl
           - server_name {{ ansible_fqdn }}
+          - ssl on
           - location / { 
               proxy_pass https://localhost:8443;
               proxy_redirect off;
